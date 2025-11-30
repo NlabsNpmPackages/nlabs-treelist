@@ -1,6 +1,6 @@
 {
   "name": "nlabs-treelist",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A powerful, customizable TreeList component for Angular with theme support, dynamic loading, and flexible configurations",
   "keywords": [
     "angular",
@@ -17,7 +17,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/nlabs-treelist.git"
+    "url": "https://github.com/NlabsNpmPackages/nlabs-treelist.git"
   },
   "peerDependencies": {
     "@angular/common": "^20.3.0",
