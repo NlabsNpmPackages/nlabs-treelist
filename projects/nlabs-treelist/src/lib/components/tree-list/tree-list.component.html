@@ -1,0 +1,142 @@
+<!-- Tema Switcher (Opsiyonel) -->
+@if (showThemeSwitcher) {
+  <div class="theme-switcher">
+    <button
+      class="theme-btn"
+      [class.active]="themeMode === 'light'"
+      (click)="setThemeMode('light')"
+      aria-label="Light Theme"
+      title="Light Theme"
+    >
+      <span class="theme-icon">☀️</span>
+      <span class="theme-label">Light</span>
+    </button>
+    <button
+      class="theme-btn"
+      [class.active]="themeMode === 'dark'"
+      (click)="setThemeMode('dark')"
+      aria-label="Dark Theme"
+      title="Dark Theme"
+    >
+      <span class="theme-icon">🌙</span>
+      <span class="theme-label">Dark</span>
+    </button>
+    <button
+      class="theme-btn"
+      [class.active]="themeMode === 'system'"
+      (click)="setThemeMode('system')"
+      aria-label="System Theme"
+      title="System Theme"
+    >
+      <span class="theme-icon">💻</span>
+      <span class="theme-label">System</span>
+    </button>
+  </div>
+}
+
+<ul [class.treelist-dark]="currentTheme === 'dark'" [class.treelist-light]="currentTheme === 'light'">
+  @for (node of nodes; track node.id) {
+    <li class="treelist-item">
+      <div class="treelist-content">
+        @if (shouldShowToggle(node)) {
+          <button class="treelist-toggle" (click)="toggle(node)" [attr.aria-expanded]="node.expanded" aria-label="Toggle node">
+            {{ node.expanded ? '▼' : '▶' }}
+          </button>
+        } @else {
+          <span class="treelist-spacer"></span>
+        }
+        <input
+          type="checkbox"
+          [(ngModel)]="node.checked"
+          (ngModelChange)="onCheckboxChange(node)"
+          (click)="$event.stopPropagation()"
+          class="treelist-checkbox"
+          [id]="'checkbox-' + node.id"
+          [attr.aria-label]="'Select ' + getName(node)"
+        />
+
+        <!-- Custom template varsa onu kullan, yoksa default gösterim -->
+        @if (nodeContentTemplate) {
+          <div class="treelist-node-content" (click)="onNameClick(node)">
+            <ng-container
+              *ngTemplateOutlet="nodeContentTemplate; context: { $implicit: node, node: node }"
+            ></ng-container>
+          </div>
+        } @else {
+          <!-- Default gösterim: opsiyonel görsel + isim -->
+          <div class="treelist-node-content" (click)="onNameClick(node)">
+            @if (showImage && getImageUrl(node)) {
+              <img
+                [src]="getImageUrl(node)"
+                [alt]="getName(node)"
+                class="treelist-image"
+                (error)="$event.target.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23ddd%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214%22 fill=%22%23999%22%3E?%3C/text%3E%3C/svg%3E'"
+              />
+            }
+            <span class="treelist-name">{{ getName(node) }}</span>
+          </div>
+        }
+
+        <!-- Action Buttons -->
+        @if (showActions) {
+          <div class="treelist-actions">
+            <button
+              class="action-btn action-add"
+              (click)="onAddChild(node, $event)"
+              title="Alt öğe ekle"
+              aria-label="Add child to {{ getName(node) }}"
+            >
+              <span class="action-icon">+</span>
+            </button>
+            <button
+              class="action-btn action-edit"
+              (click)="onEditNode(node, $event)"
+              title="Düzenle"
+              aria-label="Edit {{ getName(node) }}"
+            >
+              <span class="action-icon">✎</span>
+            </button>
+            <button
+              class="action-btn action-delete"
+              (click)="onDeleteNode(node, $event)"
+              title="Sil"
+              aria-label="Delete {{ getName(node) }}"
+            >
+              <span class="action-icon">×</span>
+            </button>
+          </div>
+        }
+      </div>
+      @if (node.children && node.children.length > 0 && node.expanded) {
+        <nlabs-tree-list
+          [nodes]="node.children"
+          [idField]="idField"
+          [parentIdField]="parentIdField"
+          [nameField]="nameField"
+          [imageField]="imageField"
+          [childrenField]="childrenField"
+          [showImage]="showImage"
+          [showActions]="showActions"
+          [theme]="currentTheme"
+          [showThemeSwitcher]="false"
+          [expandOnSelect]="expandOnSelect"
+          [selectChildren]="selectChildren"
+          [nameClickAction]="nameClickAction"
+          [loadChildrenFn]="loadChildrenFn"
+          (selectedIdsChange)="emitSelectedIds()"
+          (nodeAdd)="nodeAdd.emit($event)"
+          (nodeEdit)="nodeEdit.emit($event)"
+          (nodeDelete)="nodeDelete.emit($event)"
+        >
+          @if (nodeContentTemplate) {
+            <ng-template #nodeContent let-node>
+              <ng-container
+                *ngTemplateOutlet="nodeContentTemplate; context: { $implicit: node, node: node }"
+              ></ng-container>
+            </ng-template>
+          }
+        </nlabs-tree-list>
+      }
+    </li>
+  }
+</ul>
