@@ -20,6 +20,8 @@ A powerful, customizable TreeList component for Angular with theme support, dyna
 npm install nlabs-treelist
 ```
 
+> **Note**: This package requires Angular 20.3.0 or higher. Make sure your project meets this requirement before installing.
+
 ## Usage
 
 ### Basic Example
@@ -100,6 +102,83 @@ loadChildren = (parentId: string) => {
 | `themeChange` | `EventEmitter<'light' \| 'dark'>` | Emits when theme changes |
 | `nodeExpanded` | `EventEmitter<TreeNode>` | Emits when node is expanded |
 | `nodeCollapsed` | `EventEmitter<TreeNode>` | Emits when node is collapsed |
+
+## Advanced Features
+
+### Custom Field Mapping
+
+You can use custom field names if your data model doesn't match the default TreeNode interface:
+
+```typescript
+// If your data looks like this:
+interface MyCustomNode {
+  customId: string;
+  label: string;
+  parent: string;
+  items: MyCustomNode[];
+}
+
+// Configure the component like this:
+<nlabs-tree-list
+  [nodes]="myCustomData"
+  [idField]="'customId'"
+  [nameField]="'label'"
+  [parentIdField]="'parent'"
+  [childrenField]="'items'"
+></nlabs-tree-list>
+```
+
+### Theme Switcher
+
+Enable the built-in theme switcher to allow users to choose between Light, Dark, or System themes:
+
+```typescript
+<nlabs-tree-list
+  [nodes]="treeData"
+  [showThemeSwitcher]="true"
+  (themeChange)="onThemeChange($event)"
+></nlabs-tree-list>
+```
+
+### Auto-behaviors
+
+Configure automatic selection and expansion behaviors:
+
+```typescript
+// Auto-expand nodes when their checkbox is selected
+<nlabs-tree-list
+  [nodes]="treeData"
+  [expandOnSelect]="true"
+></nlabs-tree-list>
+
+// Auto-select all children when parent is selected
+<nlabs-tree-list
+  [nodes]="treeData"
+  [selectChildren]="true"
+></nlabs-tree-list>
+```
+
+### Name Click Actions
+
+Configure what happens when users click on node names:
+
+```typescript
+// 'toggle': Expand/collapse the node (default)
+// 'select': Select/deselect the node
+// 'both': Both toggle and select
+<nlabs-tree-list
+  [nodes]="treeData"
+  [nameClickAction]="'both'"
+></nlabs-tree-list>
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Repository
+
+https://github.com/NlabsNpmPackages/nlabs-treelist
 
 ## License
 
