@@ -20,7 +20,7 @@ A powerful, customizable TreeList component for Angular with theme support, dyna
 npm install nlabs-treelist
 ```
 
-> **Note**: This package requires Angular 20.3.0 or higher. Make sure your project meets this requirement before installing.
+> **Note**: This package requires Angular 21.0.0 or higher. Make sure your project meets this requirement before installing.
 
 ## Usage
 
